@@ -6,6 +6,7 @@ import requests
 import json
 import secrets
 import time
+import re
 
 load_dotenv()
 
@@ -15,10 +16,22 @@ SID = os.getenv("ACC_SID")
 fromNum = os.getenv("TWILIO_PHONE")
 
 #Query User's Phone Number
-#TODO add regex AND remove '0' at beginning of number.
-print("Hello, to recieve your 6 digit authentication code. Enter a phone number below:")
-enteredNum = input("(+44): ").strip().replace(" ", "")
-phoneNum = "44" + enteredNum
+
+print("Hello, to recieve your 6 digit authentication code. Enter a UK phone number below:")
+
+while True:
+    enteredNum = input("(+44): ").strip().replace(" ", "")
+
+    #Validation
+    if re.match(r'^(0?7\d{9})$', enteredNum):
+        if enteredNum.startswith("0"):
+            enteredNum = enteredNum[1:]
+    
+        phoneNum = "44" + enteredNum
+        break
+    else:
+        print("Incorrect UK phone number format, try again:")
+
 
 
 #Get a 6 digit auth code and start Auth timer.
