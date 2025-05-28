@@ -17,7 +17,7 @@ fromNum = os.getenv("TWILIO_PHONE")
 
 #Query User's Phone Number
 
-print("Hello, to recieve your 6 digit authentication code. Enter a UK phone number below:")
+print("Hello, to receive your 6 digit authentication code. Enter a UK phone number below:")
 
 while True:
     enteredNum = input("(+44): ").strip().replace(" ", "")
@@ -49,14 +49,22 @@ message = client.messages.create(
 
 print("Auth Token Sent!")
 
-try:
-    #Enter Auth Token to confirm.
-    user_AuthToken = int(input("Please Enter 6 Digit Code Sent: "))
-    timer_AuthEnd = time.time() - timer_AuthStart
+#User Attempts
+max_attempts = 3
+attempts = 0
 
-    if not user_AuthToken == generated_AuthToken or timer_AuthEnd > 120:
-        print("Incorrect Code - You are not authorized!")
-    else:
-        print("Correct - Welcome!")
-except ValueError:
-    print("Incorrect Code - You did not enter a 6 digit code!")
+
+while attempts < max_attempts:
+    try:
+    #Enter Auth Token to confirm.
+        user_AuthToken = int(input("Please Enter 6 Digit Code Sent: "))
+        timer_AuthEnd = time.time() - timer_AuthStart
+
+        if not user_AuthToken == generated_AuthToken or timer_AuthEnd > 120:
+            print("Incorrect Code - You are not authorized!")
+            attempts += 1
+        else:
+            print("Correct - Welcome!")
+    except ValueError:
+        print("Incorrect Code - You did not enter a 6 digit code!")
+        attempts += 1
